@@ -30,20 +30,19 @@ Add the `help` flag on any command to see how you can use it. For example, `yarn
 
 The `yarn run` command will list all of the scripts available to run for this project.
 
-## Building for production
+## Using Docker to simplify development (optional)
 
-To optimize the library application for production, run:
+You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
 
-    ./mvnw -Pprod clean package
+For example, to start a mysql database in a docker container, run:
 
-This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
-To ensure everything worked, run:
+    docker-compose -f src/main/docker/mysql.yml up -d
 
-    java -jar target/*.war
+To stop it and remove the container, run:
 
-Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
+    docker-compose -f src/main/docker/mysql.yml down
 
-Refer to [Using JHipster in production][] for more details.
+For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
 
 ## Testing
 
@@ -61,28 +60,20 @@ Unit tests are run by [Karma][] and written with [Jasmine][]. They're located in
 
 For more information, refer to the [Running tests page][].
 
-## Using Docker to simplify development (optional)
+## Building for production
 
-You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
+To optimize the library application for production, run:
 
-For example, to start a mysql database in a docker container, run:
+    ./mvnw -Pprod clean package
 
-    docker-compose -f src/main/docker/mysql.yml up -d
+This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
+To ensure everything worked, run:
 
-To stop it and remove the container, run:
+    java -jar target/*.war
 
-    docker-compose -f src/main/docker/mysql.yml down
+Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
 
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a docker image of your app by running:
-
-    ./mvnw verify -Pprod dockerfile:build
-
-Then run:
-
-    docker-compose -f src/main/docker/app.yml up -d
-
-For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
+Refer to [Using JHipster in production][] for more details.
 
 [JHipster Homepage and latest documentation]: http://www.jhipster.tech
 [JHipster 4.14.5 archive]: http://www.jhipster.tech/documentation-archive/v4.14.5
