@@ -1,5 +1,6 @@
 package com.interview.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -26,10 +27,11 @@ public class Book implements Serializable {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "price", precision=10, scale=2)
+    @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
 
     @ManyToOne
+    @JsonIgnoreProperties("")
     private Author author;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

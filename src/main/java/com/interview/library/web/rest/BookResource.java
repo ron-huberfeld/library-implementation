@@ -73,7 +73,7 @@ public class BookResource {
     public ResponseEntity<Book> updateBook(@RequestBody Book book) throws URISyntaxException {
         log.debug("REST request to update Book : {}", book);
         if (book.getId() == null) {
-            return createBook(book);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Book result = bookService.save(book);
         return ResponseEntity.ok()
@@ -93,7 +93,7 @@ public class BookResource {
         log.debug("REST request to get a page of Books");
         Page<Book> page = bookService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/books");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -106,8 +106,8 @@ public class BookResource {
     @Timed
     public ResponseEntity<Book> getBook(@PathVariable Long id) {
         log.debug("REST request to get Book : {}", id);
-        Book book = bookService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(book));
+        Optional<Book> book = bookService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(book);
     }
 
     /**

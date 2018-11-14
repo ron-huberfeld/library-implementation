@@ -4,11 +4,13 @@ import com.interview.library.domain.Book;
 import com.interview.library.repository.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 
 /**
  * Service Implementation for managing Book.
@@ -48,6 +50,7 @@ public class BookService {
         return bookRepository.findAll(pageable);
     }
 
+
     /**
      * Get one book by id.
      *
@@ -55,9 +58,9 @@ public class BookService {
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public Book findOne(Long id) {
+    public Optional<Book> findOne(Long id) {
         log.debug("Request to get Book : {}", id);
-        return bookRepository.findOne(id);
+        return bookRepository.findById(id);
     }
 
     /**
@@ -67,6 +70,6 @@ public class BookService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Book : {}", id);
-        bookRepository.delete(id);
+        bookRepository.deleteById(id);
     }
 }

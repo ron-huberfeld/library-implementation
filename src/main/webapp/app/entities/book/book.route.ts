@@ -1,26 +1,31 @@
 import { Injectable } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
-import { UserRouteAccessService } from '../../shared';
+import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
+import { UserRouteAccessService } from 'app/core';
+import { Observable, of } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { Book } from 'app/shared/model/book.model';
+import { BookService } from './book.service';
 import { BookComponent } from './book.component';
 import { BookDetailComponent } from './book-detail.component';
-import { BookPopupComponent } from './book-dialog.component';
+import { BookUpdateComponent } from './book-update.component';
 import { BookDeletePopupComponent } from './book-delete-dialog.component';
+import { IBook } from 'app/shared/model/book.model';
 
-@Injectable()
-export class BookResolvePagingParams implements Resolve<any> {
+@Injectable({ providedIn: 'root' })
+export class BookResolve implements Resolve<IBook> {
+    constructor(private service: BookService) {}
 
-    constructor(private paginationUtil: JhiPaginationUtil) {}
-
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
-        const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
-        return {
-            page: this.paginationUtil.parsePage(page),
-            predicate: this.paginationUtil.parsePredicate(sort),
-            ascending: this.paginationUtil.parseAscending(sort)
-      };
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Book> {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.find(id).pipe(
+                filter((response: HttpResponse<Book>) => response.ok),
+                map((book: HttpResponse<Book>) => book.body)
+            );
+        }
+        return of(new Book());
     }
 }
 
@@ -29,16 +34,45 @@ export const bookRoute: Routes = [
         path: 'book',
         component: BookComponent,
         resolve: {
-            'pagingParams': BookResolvePagingParams
+            pagingParams: JhiResolvePagingParams
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            defaultSort: 'id,asc',
+            pageTitle: 'Books'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'book/:id/view',
+        component: BookDetailComponent,
+        resolve: {
+            book: BookResolve
         },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Books'
         },
         canActivate: [UserRouteAccessService]
-    }, {
-        path: 'book/:id',
-        component: BookDetailComponent,
+    },
+    {
+        path: 'book/new',
+        component: BookUpdateComponent,
+        resolve: {
+            book: BookResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Books'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'book/:id/edit',
+        component: BookUpdateComponent,
+        resolve: {
+            book: BookResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Books'
@@ -49,28 +83,11 @@ export const bookRoute: Routes = [
 
 export const bookPopupRoute: Routes = [
     {
-        path: 'book-new',
-        component: BookPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Books'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'book/:id/edit',
-        component: BookPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Books'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
         path: 'book/:id/delete',
         component: BookDeletePopupComponent,
+        resolve: {
+            book: BookResolve
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'Books'

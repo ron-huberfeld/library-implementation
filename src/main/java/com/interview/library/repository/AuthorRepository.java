@@ -1,13 +1,12 @@
 package com.interview.library.repository;
 
 import com.interview.library.domain.Author;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the Author entity.
+ * Spring Data  repository for the Author entity.
  */
 @SuppressWarnings("unused")
 @Repository

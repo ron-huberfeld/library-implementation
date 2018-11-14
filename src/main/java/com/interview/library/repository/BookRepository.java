@@ -1,13 +1,12 @@
 package com.interview.library.repository;
 
 import com.interview.library.domain.Book;
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data JPA repository for the Book entity.
+ * Spring Data  repository for the Book entity.
  */
 @SuppressWarnings("unused")
 @Repository

@@ -1,0 +1,15 @@
+// JDL definition for application 'library' generated with command 'jhipster export-jdl'
+
+entity Author {
+  name String
+}
+entity Book {
+  title String,
+  price BigDecimal
+}
+relationship ManyToOne {
+  Book{author(name)} to Author
+}
+
+paginate Author, Book with pagination
+service Author, Book with serviceClass

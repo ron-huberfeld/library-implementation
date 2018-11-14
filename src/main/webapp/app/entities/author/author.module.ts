@@ -1,51 +1,23 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { LibrarySharedModule } from '../../shared';
+import { LibrarySharedModule } from 'app/shared';
 import {
-    AuthorService,
-    AuthorPopupService,
     AuthorComponent,
     AuthorDetailComponent,
-    AuthorDialogComponent,
-    AuthorPopupComponent,
+    AuthorUpdateComponent,
     AuthorDeletePopupComponent,
     AuthorDeleteDialogComponent,
     authorRoute,
-    authorPopupRoute,
-    AuthorResolvePagingParams,
+    authorPopupRoute
 } from './';
 
-const ENTITY_STATES = [
-    ...authorRoute,
-    ...authorPopupRoute,
-];
+const ENTITY_STATES = [...authorRoute, ...authorPopupRoute];
 
 @NgModule({
-    imports: [
-        LibrarySharedModule,
-        RouterModule.forChild(ENTITY_STATES)
-    ],
-    declarations: [
-        AuthorComponent,
-        AuthorDetailComponent,
-        AuthorDialogComponent,
-        AuthorDeleteDialogComponent,
-        AuthorPopupComponent,
-        AuthorDeletePopupComponent,
-    ],
-    entryComponents: [
-        AuthorComponent,
-        AuthorDialogComponent,
-        AuthorPopupComponent,
-        AuthorDeleteDialogComponent,
-        AuthorDeletePopupComponent,
-    ],
-    providers: [
-        AuthorService,
-        AuthorPopupService,
-        AuthorResolvePagingParams,
-    ],
+    imports: [LibrarySharedModule, RouterModule.forChild(ENTITY_STATES)],
+    declarations: [AuthorComponent, AuthorDetailComponent, AuthorUpdateComponent, AuthorDeleteDialogComponent, AuthorDeletePopupComponent],
+    entryComponents: [AuthorComponent, AuthorUpdateComponent, AuthorDeleteDialogComponent, AuthorDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LibraryAuthorModule {}

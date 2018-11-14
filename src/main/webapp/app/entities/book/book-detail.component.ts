@@ -1,55 +1,24 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs/Subscription';
-import { JhiEventManager } from 'ng-jhipster';
 
-import { Book } from './book.model';
-import { BookService } from './book.service';
+import { IBook } from 'app/shared/model/book.model';
 
 @Component({
     selector: 'jhi-book-detail',
     templateUrl: './book-detail.component.html'
 })
-export class BookDetailComponent implements OnInit, OnDestroy {
+export class BookDetailComponent implements OnInit {
+    book: IBook;
 
-    book: Book;
-    private subscription: Subscription;
-    private eventSubscriber: Subscription;
-
-    constructor(
-        private eventManager: JhiEventManager,
-        private bookService: BookService,
-        private route: ActivatedRoute
-    ) {
-    }
+    constructor(private activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
-            this.load(params['id']);
+        this.activatedRoute.data.subscribe(({ book }) => {
+            this.book = book;
         });
-        this.registerChangeInBooks();
     }
 
-    load(id) {
-        this.bookService.find(id)
-            .subscribe((bookResponse: HttpResponse<Book>) => {
-                this.book = bookResponse.body;
-            });
-    }
     previousState() {
         window.history.back();
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-        this.eventManager.destroy(this.eventSubscriber);
-    }
-
-    registerChangeInBooks() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'bookListModification',
-            (response) => this.load(this.book.id)
-        );
     }
 }

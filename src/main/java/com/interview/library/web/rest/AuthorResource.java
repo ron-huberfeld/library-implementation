@@ -73,7 +73,7 @@ public class AuthorResource {
     public ResponseEntity<Author> updateAuthor(@RequestBody Author author) throws URISyntaxException {
         log.debug("REST request to update Author : {}", author);
         if (author.getId() == null) {
-            return createAuthor(author);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Author result = authorService.save(author);
         return ResponseEntity.ok()
@@ -93,7 +93,7 @@ public class AuthorResource {
         log.debug("REST request to get a page of Authors");
         Page<Author> page = authorService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/authors");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -106,8 +106,8 @@ public class AuthorResource {
     @Timed
     public ResponseEntity<Author> getAuthor(@PathVariable Long id) {
         log.debug("REST request to get Author : {}", id);
-        Author author = authorService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(author));
+        Optional<Author> author = authorService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(author);
     }
 
     /**

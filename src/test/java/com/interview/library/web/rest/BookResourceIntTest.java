@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
 
+
 import static com.interview.library.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -149,7 +150,7 @@ public class BookResourceIntTest {
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getBook() throws Exception {
@@ -182,7 +183,7 @@ public class BookResourceIntTest {
         int databaseSizeBeforeUpdate = bookRepository.findAll().size();
 
         // Update the book
-        Book updatedBook = bookRepository.findOne(book.getId());
+        Book updatedBook = bookRepository.findById(book.getId()).get();
         // Disconnect from session so that the updates on updatedBook are not directly saved in db
         em.detach(updatedBook);
         updatedBook
@@ -209,15 +210,15 @@ public class BookResourceIntTest {
 
         // Create the Book
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBookMockMvc.perform(put("/api/books")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(book)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Book in the database
         List<Book> bookList = bookRepository.findAll();
-        assertThat(bookList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(bookList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

@@ -1,89 +1,70 @@
 import './vendor.ts';
 
-import { NgModule, Injector } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Ng2Webstorage, LocalStorageService, SessionStorageService  } from 'ngx-webstorage';
-import { JhiEventManager } from 'ng-jhipster';
+import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Ng2Webstorage } from 'ngx-webstorage';
+import { NgJhipsterModule } from 'ng-jhipster';
 
 import { AuthInterceptor } from './blocks/interceptor/auth.interceptor';
 import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
 import { ErrorHandlerInterceptor } from './blocks/interceptor/errorhandler.interceptor';
 import { NotificationInterceptor } from './blocks/interceptor/notification.interceptor';
-import { LibrarySharedModule, UserRouteAccessService } from './shared';
-import { LibraryAppRoutingModule} from './app-routing.module';
+import { LibrarySharedModule } from 'app/shared';
+import { LibraryCoreModule } from 'app/core';
+import { LibraryAppRoutingModule } from './app-routing.module';
 import { LibraryHomeModule } from './home/home.module';
-import { LibraryAdminModule } from './admin/admin.module';
 import { LibraryAccountModule } from './account/account.module';
 import { LibraryEntityModule } from './entities/entity.module';
-import { PaginationConfig } from './blocks/config/uib-pagination.config';
+import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
-import {
-    JhiMainComponent,
-    NavbarComponent,
-    FooterComponent,
-    ProfileService,
-    PageRibbonComponent,
-    ErrorComponent
-} from './layouts';
+import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
 
 @NgModule({
     imports: [
         BrowserModule,
         LibraryAppRoutingModule,
-        Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
-        LibrarySharedModule,
+        Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
+        NgJhipsterModule.forRoot({
+            // set below to true to make alerts look like toast
+            alertAsToast: false,
+            alertTimeout: 5000
+        }),
+        LibrarySharedModule.forRoot(),
+        LibraryCoreModule,
         LibraryHomeModule,
-        LibraryAdminModule,
         LibraryAccountModule,
-        LibraryEntityModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
+        LibraryEntityModule
     ],
-    declarations: [
-        JhiMainComponent,
-        NavbarComponent,
-        ErrorComponent,
-        PageRibbonComponent,
-        FooterComponent
-    ],
+    declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
     providers: [
-        ProfileService,
-        PaginationConfig,
-        UserRouteAccessService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
-            multi: true,
-            deps: [
-                LocalStorageService,
-                SessionStorageService
-            ]
+            multi: true
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthExpiredInterceptor,
-            multi: true,
-            deps: [
-                Injector
-            ]
+            multi: true
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: ErrorHandlerInterceptor,
-            multi: true,
-            deps: [
-                JhiEventManager
-            ]
+            multi: true
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NotificationInterceptor,
-            multi: true,
-            deps: [
-                Injector
-            ]
+            multi: true
         }
     ],
-    bootstrap: [ JhiMainComponent ]
+    bootstrap: [JhiMainComponent]
 })
-export class LibraryAppModule {}
+export class LibraryAppModule {
+    constructor(private dpConfig: NgbDatepickerConfig) {
+        this.dpConfig.minDate = { year: moment().year() - 100, month: 1, day: 1 };
+    }
+}

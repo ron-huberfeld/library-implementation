@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
 import static com.interview.library.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -142,7 +143,7 @@ public class AuthorResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(author.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getAuthor() throws Exception {
@@ -174,7 +175,7 @@ public class AuthorResourceIntTest {
         int databaseSizeBeforeUpdate = authorRepository.findAll().size();
 
         // Update the author
-        Author updatedAuthor = authorRepository.findOne(author.getId());
+        Author updatedAuthor = authorRepository.findById(author.getId()).get();
         // Disconnect from session so that the updates on updatedAuthor are not directly saved in db
         em.detach(updatedAuthor);
         updatedAuthor
@@ -199,15 +200,15 @@ public class AuthorResourceIntTest {
 
         // Create the Author
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restAuthorMockMvc.perform(put("/api/authors")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(author)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Author in the database
         List<Author> authorList = authorRepository.findAll();
-        assertThat(authorList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(authorList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

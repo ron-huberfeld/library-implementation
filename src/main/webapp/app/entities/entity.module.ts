@@ -5,6 +5,7 @@ import { LibraryBookModule } from './book/book.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
+    // prettier-ignore
     imports: [
         LibraryAuthorModule,
         LibraryBookModule,

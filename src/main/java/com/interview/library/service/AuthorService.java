@@ -4,11 +4,13 @@ import com.interview.library.domain.Author;
 import com.interview.library.repository.AuthorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 
 /**
  * Service Implementation for managing Author.
@@ -48,6 +50,7 @@ public class AuthorService {
         return authorRepository.findAll(pageable);
     }
 
+
     /**
      * Get one author by id.
      *
@@ -55,9 +58,9 @@ public class AuthorService {
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public Author findOne(Long id) {
+    public Optional<Author> findOne(Long id) {
         log.debug("Request to get Author : {}", id);
-        return authorRepository.findOne(id);
+        return authorRepository.findById(id);
     }
 
     /**
@@ -67,6 +70,6 @@ public class AuthorService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Author : {}", id);
-        authorRepository.delete(id);
+        authorRepository.deleteById(id);
     }
 }

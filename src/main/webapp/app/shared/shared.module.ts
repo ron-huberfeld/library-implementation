@@ -1,49 +1,21 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 
-import {
-    LibrarySharedLibsModule,
-    LibrarySharedCommonModule,
-    CSRFService,
-    AuthServerProvider,
-    AccountService,
-    UserService,
-    StateStorageService,
-    LoginService,
-    LoginModalService,
-    JhiLoginModalComponent,
-    Principal,
-    HasAnyAuthorityDirective,
-} from './';
+import { NgbDateMomentAdapter } from './util/datepicker-adapter';
+import { LibrarySharedLibsModule, LibrarySharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective } from './';
 
 @NgModule({
-    imports: [
-        LibrarySharedLibsModule,
-        LibrarySharedCommonModule
-    ],
-    declarations: [
-        JhiLoginModalComponent,
-        HasAnyAuthorityDirective
-    ],
-    providers: [
-        LoginService,
-        LoginModalService,
-        AccountService,
-        StateStorageService,
-        Principal,
-        CSRFService,
-        AuthServerProvider,
-        UserService,
-        DatePipe
-    ],
+    imports: [LibrarySharedLibsModule, LibrarySharedCommonModule],
+    declarations: [JhiLoginModalComponent, HasAnyAuthorityDirective],
+    providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent],
-    exports: [
-        LibrarySharedCommonModule,
-        JhiLoginModalComponent,
-        HasAnyAuthorityDirective,
-        DatePipe
-    ],
+    exports: [LibrarySharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
-
 })
-export class LibrarySharedModule {}
+export class LibrarySharedModule {
+    static forRoot() {
+        return {
+            ngModule: LibrarySharedModule
+        };
+    }
+}

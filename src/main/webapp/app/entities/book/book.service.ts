@@ -1,74 +1,38 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { SERVER_API_URL } from '../../app.constants';
+import { Observable } from 'rxjs';
 
-import { Book } from './book.model';
-import { createRequestOption } from '../../shared';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared';
+import { IBook } from 'app/shared/model/book.model';
 
-export type EntityResponseType = HttpResponse<Book>;
+type EntityResponseType = HttpResponse<IBook>;
+type EntityArrayResponseType = HttpResponse<IBook[]>;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class BookService {
+    public resourceUrl = SERVER_API_URL + 'api/books';
 
-    private resourceUrl =  SERVER_API_URL + 'api/books';
+    constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) { }
-
-    create(book: Book): Observable<EntityResponseType> {
-        const copy = this.convert(book);
-        return this.http.post<Book>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+    create(book: IBook): Observable<EntityResponseType> {
+        return this.http.post<IBook>(this.resourceUrl, book, { observe: 'response' });
     }
 
-    update(book: Book): Observable<EntityResponseType> {
-        const copy = this.convert(book);
-        return this.http.put<Book>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+    update(book: IBook): Observable<EntityResponseType> {
+        return this.http.put<IBook>(this.resourceUrl, book, { observe: 'response' });
     }
 
     find(id: number): Observable<EntityResponseType> {
-        return this.http.get<Book>(`${this.resourceUrl}/${id}`, { observe: 'response'})
-            .map((res: EntityResponseType) => this.convertResponse(res));
+        return this.http.get<IBook>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    query(req?: any): Observable<HttpResponse<Book[]>> {
+    query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get<Book[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<Book[]>) => this.convertArrayResponse(res));
+        return this.http.get<IBook[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
-    }
-
-    private convertResponse(res: EntityResponseType): EntityResponseType {
-        const body: Book = this.convertItemFromServer(res.body);
-        return res.clone({body});
-    }
-
-    private convertArrayResponse(res: HttpResponse<Book[]>): HttpResponse<Book[]> {
-        const jsonResponse: Book[] = res.body;
-        const body: Book[] = [];
-        for (let i = 0; i < jsonResponse.length; i++) {
-            body.push(this.convertItemFromServer(jsonResponse[i]));
-        }
-        return res.clone({body});
-    }
-
-    /**
-     * Convert a returned JSON object to Book.
-     */
-    private convertItemFromServer(book: Book): Book {
-        const copy: Book = Object.assign({}, book);
-        return copy;
-    }
-
-    /**
-     * Convert a Book to a JSON which can be sent to the server.
-     */
-    private convert(book: Book): Book {
-        const copy: Book = Object.assign({}, book);
-        return copy;
+        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 }

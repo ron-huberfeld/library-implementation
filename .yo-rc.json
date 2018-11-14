@@ -3,7 +3,8 @@
     "promptValues": {
       "packageName": "com.interview.library"
     },
-    "jhipsterVersion": "4.14.5",
+    "jhipsterVersion": "5.7.0",
+    "applicationType": "monolith",
     "baseName": "library",
     "packageName": "com.interview.library",
     "packageFolder": "com/interview/library",
@@ -19,15 +20,14 @@
     "messageBroker": false,
     "serviceDiscoveryType": false,
     "buildTool": "maven",
-    "enableSocialSignIn": false,
     "enableSwaggerCodegen": false,
-    "jwtSecretKey": "6f7768d684274dfa6ae4785755fa3ef1d31c9224",
+    "jwtSecretKey": "YzNhYTAyMzVmYzc2ZDYyODU1NzZiOTRlOGM0YzQ1ZjY5NmFmYTllMmNlNDhjMGM0ZmFiN2FiMTFhMzgyMmNlOWI0MjM4MzFlNzNiMzFlYmEwYzgwZTFkNjQ0NGUwYzk2MzJmMTkxYmQ1ODVlNjI5ZTZlYmViNGQ0MWZjOGNhOTQ=",
     "clientFramework": "angularX",
     "useSass": false,
-    "clientPackageManager": "yarn",
-    "applicationType": "monolith",
+    "clientPackageManager": "npm",
     "testFrameworks": [],
     "jhiPrefix": "jhi",
+    "otherModules": [],
     "enableTranslation": false
   }
 }

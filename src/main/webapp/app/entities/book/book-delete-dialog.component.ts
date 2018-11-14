@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Book } from './book.model';
-import { BookPopupService } from './book-popup.service';
+import { IBook } from 'app/shared/model/book.model';
 import { BookService } from './book.service';
 
 @Component({
@@ -13,22 +12,16 @@ import { BookService } from './book.service';
     templateUrl: './book-delete-dialog.component.html'
 })
 export class BookDeleteDialogComponent {
+    book: IBook;
 
-    book: Book;
-
-    constructor(
-        private bookService: BookService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+    constructor(private bookService: BookService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
     confirmDelete(id: number) {
-        this.bookService.delete(id).subscribe((response) => {
+        this.bookService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'bookListModification',
                 content: 'Deleted an book'
@@ -43,22 +36,30 @@ export class BookDeleteDialogComponent {
     template: ''
 })
 export class BookDeletePopupComponent implements OnInit, OnDestroy {
+    private ngbModalRef: NgbModalRef;
 
-    routeSub: any;
-
-    constructor(
-        private route: ActivatedRoute,
-        private bookPopupService: BookPopupService
-    ) {}
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
 
     ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.bookPopupService
-                .open(BookDeleteDialogComponent as Component, params['id']);
+        this.activatedRoute.data.subscribe(({ book }) => {
+            setTimeout(() => {
+                this.ngbModalRef = this.modalService.open(BookDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+                this.ngbModalRef.componentInstance.book = book;
+                this.ngbModalRef.result.then(
+                    result => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    },
+                    reason => {
+                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.ngbModalRef = null;
+                    }
+                );
+            }, 0);
         });
     }
 
     ngOnDestroy() {
-        this.routeSub.unsubscribe();
+        this.ngbModalRef = null;
     }
 }
