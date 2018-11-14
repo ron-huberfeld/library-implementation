@@ -1,6 +1,20 @@
 # library
 This application was generated using JHipster 5.7.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v5.7.0](https://www.jhipster.tech/documentation-archive/v5.7.0).
 
+## Using Docker to simplify development (optional)
+
+You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
+
+For example, to start a mysql database in a docker container, run:
+
+    docker-compose -f src/main/docker/mysql.yml up -d
+
+To stop it and remove the container, run:
+
+    docker-compose -f src/main/docker/mysql.yml down
+
+For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
+
 ## Development
 
 To start your application in the dev profile, simply run:
@@ -23,18 +37,6 @@ will generate few files:
     create src/main/webapp/app/my-component/my-component.component.html
     create src/main/webapp/app/my-component/my-component.component.ts
     update src/main/webapp/app/app.module.ts
-
-
-## Building for production
-
-To optimize the library application for production, run:
-
-    ./mvnw -Pprod clean package
-
-To ensure everything worked, run:
-
-    java -jar target/*.war
-
 
 Refer to [Using JHipster in production][] for more details.
 
@@ -62,32 +64,15 @@ Then, run a Sonar analysis:
 
 For more information, refer to the [Code quality page][].
 
-## Using Docker to simplify development (optional)
+## Building for production
 
-You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
+To optimize the library application for production, run:
 
-For example, to start a mysql database in a docker container, run:
+    ./mvnw -Pprod clean package
 
-    docker-compose -f src/main/docker/mysql.yml up -d
+To ensure everything worked, run:
 
-To stop it and remove the container, run:
-
-    docker-compose -f src/main/docker/mysql.yml down
-
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a docker image of your app by running:
-
-    ./mvnw package -Pprod jib:dockerBuild
-
-Then run:
-
-    docker-compose -f src/main/docker/app.yml up -d
-
-For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
-
-## Continuous Integration (optional)
-
-To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
+    java -jar target/*.war
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.7.0 archive]: https://www.jhipster.tech/documentation-archive/v5.7.0
