@@ -123,4 +123,21 @@ public class BookResource {
         bookService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
+
+//    /**
+//     * GET  /books/cheap : get all the cheap books.
+//     *
+//     * @param pageable the pagination information
+//     * @return the ResponseEntity with status 200 (OK) and the list of books in body
+//     */
+//    @GetMapping("/books/cheap")
+//    @Timed
+//    public ResponseEntity<List<Book>> getOnlyCheapBooks(Pageable pageable) {
+//        log.debug("REST request to get a page of Books");
+//        Page<Book> page = bookService.findOnlyCheapBooks(pageable);
+//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/books/cheap");
+//        return ResponseEntity.ok().headers(headers).body(page.getContent());
+//    }
+
+
 }

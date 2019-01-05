@@ -1,16 +1,18 @@
 package com.interview.library.service;
 
-import com.interview.library.domain.Book;
-import com.interview.library.repository.BookRepository;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import com.interview.library.domain.Book;
+import com.interview.library.repository.BookRepository;
 
 /**
  * Service Implementation for managing Book.
@@ -23,17 +25,18 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    public BookService(BookRepository bookRepository) {
+    public BookService (BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
     /**
      * Save a book.
      *
-     * @param book the entity to save
+     * @param book
+     *        the entity to save
      * @return the persisted entity
      */
-    public Book save(Book book) {
+    public Book save (Book book) {
         log.debug("Request to save Book : {}", book);
         return bookRepository.save(book);
     }
@@ -41,24 +44,25 @@ public class BookService {
     /**
      * Get all the books.
      *
-     * @param pageable the pagination information
+     * @param pageable
+     *        the pagination information
      * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public Page<Book> findAll(Pageable pageable) {
+    public Page<Book> findAll (Pageable pageable) {
         log.debug("Request to get all Books");
         return bookRepository.findAll(pageable);
     }
 
-
     /**
      * Get one book by id.
      *
-     * @param id the id of the entity
+     * @param id
+     *        the id of the entity
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public Optional<Book> findOne(Long id) {
+    public Optional<Book> findOne (Long id) {
         log.debug("Request to get Book : {}", id);
         return bookRepository.findById(id);
     }
@@ -66,10 +70,22 @@ public class BookService {
     /**
      * Delete the book by id.
      *
-     * @param id the id of the entity
+     * @param id
+     *        the id of the entity
      */
-    public void delete(Long id) {
+    public void delete (Long id) {
         log.debug("Request to delete Book : {}", id);
         bookRepository.deleteById(id);
     }
+
+//    /**
+//     * @param pageable
+//     *        the pagination information
+//     * @return a list of all books cheaper then 20
+//     */
+//    @Transactional(readOnly = true)
+//    public Page<Book> findOnlyCheapBooks (Pageable pageable) {
+//        log.debug("Request to get filtered Books");
+//        return bookRepository.findOnlyCheapBooks(pageable);
+//    }
 }

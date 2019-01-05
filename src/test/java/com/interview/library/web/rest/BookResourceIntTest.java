@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -150,7 +151,7 @@ public class BookResourceIntTest {
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.intValue())));
     }
-    
+
     @Test
     @Transactional
     public void getBook() throws Exception {
@@ -253,4 +254,30 @@ public class BookResourceIntTest {
         book1.setId(null);
         assertThat(book1).isNotEqualTo(book2);
     }
+
+//    @Test
+//    @Transactional
+//    public void getOnlyCheapBooks() throws Exception {
+//        // Initialize the database
+//        bookRepository.saveAndFlush(new Book().title("A1")
+//                                              .price(new BigDecimal(100)));
+//        bookRepository.saveAndFlush(new Book().title("A2")
+//                                              .price(new BigDecimal(10)));
+//
+//        // Get list of cheap book using the new service
+//        List<Book> onlyCheapBooks = bookRepository.findAll();
+//
+//        // Get all the bookList
+//        restBookMockMvc.perform(get("/api/books/cheap"))
+//                       .andExpect(status().isOk())
+//                       .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                       .andExpect(jsonPath("$.[*].id").value(hasItem(book.getId().intValue())))
+//                       .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
+//                       .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.intValue())));
+//
+//        // Validate the results
+//        assertThat(onlyCheapBooks).hasSize(1);
+//        assertThat(onlyCheapBooks.get(0).getPrice()).isEqualTo(10);
+//    }
+
 }
